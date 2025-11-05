@@ -29,11 +29,15 @@ const pool = new pg.Pool({
 const app = express();
 
 // --- INÍCIO DA CORREÇÃO ---
-// Agora, permitimos o localhost (para o seu PC) E a URL do Netlify (via variável de ambiente)
-const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+// Lógica de CORS mais segura
+const allowedOrigins = ['http://localhost:5173'];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+  console.log(`Adicionando ${process.env.FRONTEND_URL} às origens permitidas.`);
+}
 
 app.use(cors({
-  origin: allowedOrigin,
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
