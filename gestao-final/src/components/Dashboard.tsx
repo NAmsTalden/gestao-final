@@ -14,7 +14,44 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ processes, searchTerm, activeFilter, setActiveFilter, onEditProcess, onDeleteProcess, onUpdateProcess }: DashboardProps) => {
-  const filteredProcesses = useMemo(() => { let filtered = processes; if (searchTerm) { filtered = filtered.filter(process => process.numero.toLowerCase().includes(searchTerm.toLowerCase()) || process.objeto.toLowerCase().includes(searchTerm.toLowerCase()) || process.secretaria.toLowerCase().includes(searchTerm.toLowerCase())); } if (activeFilter && activeFilter !== 'todos') { switch (activeFilter) { case 'prazos-vencendo': filtered = filtered.filter(p => p.status === 'aguardando-documento'); break; case 'concluidos-mes': filtered = filtered.filter(p => p.status === 'finalizado'); break; case 'alertas': filtered = filtered.filter(p => p.status === 'aguardando-documento'); break; default: break; } } return filtered; }, [searchTerm, activeFilter, processes]);
+  const filteredProcesses = useMemo(() => {
+    let filtered = processes;
+    
+    if (searchTerm) {
+      filtered = filtered.filter(process =>
+        process.numero.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        process.objeto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        process.secretaria.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    if (activeFilter && activeFilter !== 'todos') {
+      switch (activeFilter) {
+        case 'prazos-vencendo':
+          filtered = filtered.filter(p => p.status === 'aguardando-documento');
+          break;
+        case 'concluidos-mes':
+          filtered = filtered.filter(p => p.status === 'finalizado');
+          break;
+        case 'alertas':
+          filtered = filtered.filter(p => p.status === 'aguardando-documento');
+          break;
+        case 'ativos':
+          filtered = filtered.filter(p => p.status !== 'finalizado');
+          break;
+        case 'em-analise':
+        case 'aguardando-documento':
+        case 'publicado':
+        case 'finalizado':
+          filtered = filtered.filter(p => p.status === activeFilter);
+          break;
+        default:
+          break;
+      }
+    }
+    
+    return filtered;
+  }, [searchTerm, activeFilter, processes]);
   const stats = { totalAtivos: processes.filter(p => p.status !== 'finalizado').length, prazosVencendo: processes.filter(p => p.status === 'aguardando-documento').length, concluídosNoMês: processes.filter(p => p.status === 'finalizado').length, alertas: processes.filter(p => p.status === 'aguardando-documento').length };
   const StatCard = ({ title, value, icon: Icon, color, filterKey, description }: { title: string; value: number; icon: any; color: string; filterKey: string; description: string; }) => (
     <div 
@@ -52,15 +89,81 @@ const Dashboard = ({ processes, searchTerm, activeFilter, setActiveFilter, onEdi
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
         <StatCard title="Total de Processos Ativos" value={stats.totalAtivos} icon={FileText} color="bg-blue-500" filterKey="ativos" description="Processos em andamento" />
-        <StatCard title="Prazos Vencendo" value={stats.prazosVencendo} icon={AlertTriangle} color="bg-yellow-500" filterKey="prazos-vencendo" description="Próximos 7 dias" />
-        <StatCard title="Concluídos no Mês" value={stats.concluídosNoMês} icon={CheckCircle2} color="bg-green-500" filterKey="concluidos-mes" description="Janeiro 2024" />
+        <StatCard title="Prazos Vencendo" value={stats.prazosVencendo} icon={AlertTriangle} color="bg-yellow-500" filterKey="prazos-vencendo" description="Requer atenção urgente" />
+        <StatCard title="Concluídos no Mês" value={stats.concluídosNoMês} icon={CheckCircle2} color="bg-green-500" filterKey="concluidos-mes" description={`${new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`} />
         <StatCard title="Alertas/Pendências" value={stats.alertas} icon={Clock} color="bg-red-500" filterKey="alertas" description="Requer atenção" />
+      </div>
+      
+      <div className="mb-6 bg-white rounded-lg border border-gray-200 p-4">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros Rápidos</h2>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setActiveFilter(activeFilter === 'em-analise' ? '' : 'em-analise')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'em-analise'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            aria-pressed={activeFilter === 'em-analise'}
+          >
+            Em Análise
+          </button>
+          <button
+            onClick={() => setActiveFilter(activeFilter === 'aguardando-documento' ? '' : 'aguardando-documento')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'aguardando-documento'
+                ? 'bg-yellow-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            aria-pressed={activeFilter === 'aguardando-documento'}
+          >
+            Aguardando Documento
+          </button>
+          <button
+            onClick={() => setActiveFilter(activeFilter === 'publicado' ? '' : 'publicado')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'publicado'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            aria-pressed={activeFilter === 'publicado'}
+          >
+            Publicado
+          </button>
+          <button
+            onClick={() => setActiveFilter(activeFilter === 'finalizado' ? '' : 'finalizado')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'finalizado'
+                ? 'bg-gray-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            aria-pressed={activeFilter === 'finalizado'}
+          >
+            Finalizado
+          </button>
+          {activeFilter && (
+            <button
+              onClick={() => setActiveFilter('')}
+              className="px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+              aria-label="Limpar filtros"
+            >
+              Limpar Filtros
+            </button>
+          )}
+        </div>
       </div>
       {activeFilter && (
         <div className="mb-4 flex items-center space-x-2" role="status" aria-live="polite">
           <span className="text-sm text-gray-600">Filtro ativo:</span>
           <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-            {activeFilter === 'prazos-vencendo' ? 'Prazos Vencendo' : activeFilter === 'concluidos-mes' ? 'Concluídos no Mês' : activeFilter === 'alertas' ? 'Alertas/Pendências' : 'Filtro Ativo'}
+            {activeFilter === 'prazos-vencendo' ? 'Prazos Vencendo' : 
+             activeFilter === 'concluidos-mes' ? 'Concluídos no Mês' : 
+             activeFilter === 'alertas' ? 'Alertas/Pendências' :
+             activeFilter === 'ativos' ? 'Processos Ativos' :
+             activeFilter === 'em-analise' ? 'Em Análise' :
+             activeFilter === 'aguardando-documento' ? 'Aguardando Documento' :
+             activeFilter === 'publicado' ? 'Publicado' :
+             activeFilter === 'finalizado' ? 'Finalizado' : 'Filtro Ativo'}
             <button 
               onClick={() => setActiveFilter('')} 
               className="ml-2 hover:bg-blue-200 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-blue-500" 

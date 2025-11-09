@@ -217,11 +217,18 @@ function App() {
         );
       }
       case 'busca-avancada':
-        return <BuscaAvancada />;
+        return (
+          <BuscaAvancada
+            processes={processes}
+            onEditProcess={handleEditProcess}
+            onDeleteProcess={handleDeleteProcess}
+            onUpdateProcess={handleUpdateProcess}
+          />
+        );
       case 'relatorios':
-        return <Relatorios />;
+        return <Relatorios processes={processes} />;
       case 'configuracoes':
-        return <Configuracoes />;
+        return <Configuracoes user={session.user} />;
       default:
         return <Dashboard {...dashboardProps} />;
     }

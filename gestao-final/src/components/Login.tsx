@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import ResetPassword from './ResetPassword';
 import { FileText, Lock, AtSign } from 'lucide-react';
+import bgImage from '../assets/piracicaba-bg.jpg';
 
 const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [email, setEmail] = useState('');
@@ -85,16 +86,20 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div 
+      className="min-h-screen w-full bg-cover bg-center bg-fixed flex items-center justify-center p-4"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full shadow-lg mb-4" aria-hidden="true">
             <FileText className="text-white w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             Sistema de Gerenciamento de Licitações
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-200">
             {isRegistering ? 'Crie sua conta para começar' : 'Acesse sua conta para continuar'}
           </p>
         </div>
