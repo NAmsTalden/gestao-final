@@ -25,7 +25,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin
+            emailRedirectTo: `${window.location.origin}/#type=recovery`
           }
         });
         if (error) throw error;

@@ -18,7 +18,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ onCancel }) => {
     setMessage('');
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/#type=recovery`
+      });
 
       if (error) throw error;
 
