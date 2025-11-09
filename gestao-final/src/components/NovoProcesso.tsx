@@ -1,8 +1,6 @@
-// src/components/NovoProcesso.tsx
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { Process } from '../types';
-import { formatCurrency, parseCurrency } from '../utils/formatters'; // <-- Importamos os formatadores
+import { formatCurrency, parseCurrency } from '../utils/formatters';
 
 const FormInput = ({ label, value, onChange, placeholder, type = 'text' }: { label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, placeholder: string, type?: string }) => (
   <div>

@@ -1,6 +1,4 @@
-// src/components/Dashboard.tsx
-
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { FileText, AlertTriangle, CheckCircle2, Clock, X } from 'lucide-react';
 import ProcessoListagem from './ProcessoListagem';
 import type { Process } from '../types';

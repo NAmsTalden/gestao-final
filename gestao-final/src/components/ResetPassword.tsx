@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 interface ResetPasswordProps {
   onCancel: () => void;
 }
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ onCancel }) => {
+const ResetPassword = ({ onCancel }: ResetPasswordProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -18,7 +18,9 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ onCancel }) => {
     setMessage('');
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/#type=recovery`
+      });
 
       if (error) throw error;
 

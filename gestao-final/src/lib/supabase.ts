@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
-// Validação das variáveis de ambiente
 if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'undefined' || supabaseAnonKey === 'undefined') {
   const missingVars = []
   if (!supabaseUrl || supabaseUrl === 'undefined') missingVars.push('VITE_SUPABASE_URL')
@@ -18,12 +17,10 @@ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'undefined' || supabaseA
   console.error('   VITE_SUPABASE_ANON_KEY=sua-chave-anon-aqui')
   console.error('3. Obtenha essas informações em: https://app.supabase.com')
   console.error('4. Reinicie o servidor de desenvolvimento (npm run dev)')
-  console.error('\n💡 Dica: Execute "npm run check-env" para diagnosticar problemas')
   
   throw new Error(`Variáveis de ambiente faltando: ${missingVars.join(', ')}. Veja o console para mais detalhes.`)
 }
 
-// Cria o cliente do Supabase com configurações adicionais
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,

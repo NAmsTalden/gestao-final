@@ -1,7 +1,3 @@
-// src/components/Relatorios.tsx
-
-import React from 'react';
-
 const Relatorios = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-full">

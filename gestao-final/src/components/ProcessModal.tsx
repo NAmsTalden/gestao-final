@@ -1,9 +1,7 @@
-// src/components/ProcessModal.tsx
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Calendar, Building2, User, DollarSign, FileText, Clock, CheckCircle2, AlertTriangle, Send } from 'lucide-react';
 import type { Process } from '../types';
-import { formatCurrency } from '../utils/formatters'; // <-- Importamos o formatador
+import { formatCurrency } from '../utils/formatters';
 
 interface ProcessModalProps {
   process: Process;

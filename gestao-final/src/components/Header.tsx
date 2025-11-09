@@ -1,6 +1,4 @@
-// src/components/Header.tsx
-
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, Bell, LogOut, Settings, UserIcon } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 

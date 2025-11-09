@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import ResetPassword from './ResetPassword';
-import { FileText, Lock, AtSign } from 'lucide-react'; // Importamos os ícones
+import { FileText, Lock, AtSign } from 'lucide-react';
 
 const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [email, setEmail] = useState('');
@@ -10,8 +10,8 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState(''); // Para mensagens de sucesso (ex: registro)
-  const [pendingEmail, setPendingEmail] = useState(''); // Email que precisa ser confirmado
+  const [message, setMessage] = useState('');
+  const [pendingEmail, setPendingEmail] = useState('');
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +21,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
 
     try {
       if (isRegistering) {
-        // Registrar novo usuário
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -30,22 +29,21 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           }
         });
         if (error) throw error;
-        setPendingEmail(email); // Salva o email para possível reenvio
+        setPendingEmail(email);
         setMessage('Verifique seu email para confirmar o registro!');
       } else {
-        // Login de usuário existente
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        onLogin(); // Isso não vai redirecionar, o App.tsx vai tratar a mudança de sessão
+        onLogin();
       }
     } catch (err) {
       const error = err as Error;
       if (error.message === "Email not confirmed") {
         setError("Seu email ainda não foi confirmado. Por favor, verifique sua caixa de entrada.");
-        setPendingEmail(email); // Salva o email para reenvio
+        setPendingEmail(email);
       } else if (error.message === "Invalid login credentials") {
         setError("Email ou senha inválidos.");
       } else {
@@ -89,8 +87,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        
-        {/* --- CABEÇALHO COM TÍTULO --- */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full shadow-lg mb-4">
             <FileText className="text-white w-8 h-8" />
@@ -103,11 +99,8 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           </p>
         </div>
 
-        {/* --- FORMULÁRIO --- */}
         <div className="bg-white py-8 px-8 shadow-xl rounded-lg">
           <form className="space-y-6" onSubmit={handleAuth}>
-            
-            {/* --- CAMPO DE EMAIL --- */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
@@ -130,7 +123,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
               </div>
             </div>
 
-            {/* --- CAMPO DE SENHA --- */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Senha
@@ -154,7 +146,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
               </div>
             </div>
 
-            {/* --- MENSAGENS DE ERRO OU SUCESSO --- */}
             {error && (
               <div className="text-red-600 text-sm text-center p-2 bg-red-50 rounded-md">
                 <div>{error}</div>
@@ -176,7 +167,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
               </div>
             )}
 
-            {/* --- BOTÃO PRINCIPAL --- */}
             <div>
               <button
                 type="submit"
@@ -188,7 +178,6 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
             </div>
           </form>
 
-          {/* --- LINKS INFERIORES --- */}
           <div className="mt-6 text-center">
             <div className="text-sm">
               <button

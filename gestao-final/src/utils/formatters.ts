@@ -1,5 +1,3 @@
-// src/utils/formatters.ts
-
 /**
  * Formata um número ou string numérica como moeda brasileira (BRL).
  * Ex: 12345.67 se torna "R$ 12.345,67"

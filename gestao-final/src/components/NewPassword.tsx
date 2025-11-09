@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Lock, CheckCircle } from 'lucide-react';
 
@@ -16,17 +16,14 @@ const NewPassword = () => {
         setChecking(true);
         const hash = window.location.hash;
         
-        // Verifica se há hash de recuperação
         if (!hash || !hash.includes('type=recovery')) {
           setError('Link de recuperação inválido');
           setChecking(false);
           return;
         }
         
-        // Aguarda um pouco para o Supabase processar o hash automaticamente
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Verifica se a sessão foi criada após processar o hash
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
@@ -41,7 +38,6 @@ const NewPassword = () => {
           return;
         }
         
-        // Sessão válida, pode prosseguir
         setChecking(false);
       } catch (err) {
         setError('Erro ao processar link de recuperação');
@@ -58,7 +54,6 @@ const NewPassword = () => {
     setError('');
     setMessage('');
 
-    // Validações
     if (password.length < 6) {
       setError('A senha deve ter pelo menos 6 caracteres');
       setLoading(false);
@@ -80,7 +75,6 @@ const NewPassword = () => {
 
       setMessage('Senha atualizada com sucesso! Redirecionando para login...');
       
-      // Redireciona para login após 2 segundos
       setTimeout(() => {
         window.location.href = '/';
       }, 2000);

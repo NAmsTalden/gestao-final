@@ -1,6 +1,4 @@
-// src/components/ProcessoListagem.tsx
-
-import React, { useState, useEffect } from 'react'; // <-- Importamos o useEffect
+import { useState, useEffect } from 'react';
 import { Eye, Edit3, Trash2, FileText } from 'lucide-react';
 import type { Process } from '../types';
 import ProcessModal from './ProcessModal';

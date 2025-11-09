@@ -1,5 +1,3 @@
-// src/types/index.ts
-
 export interface Process {
     id: string;
     numero: string;
