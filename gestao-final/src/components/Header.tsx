@@ -16,7 +16,7 @@ interface HeaderProps {
   onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ searchTerm, setSearchTerm, notifications, user, onLogout }) => {
+const Header = ({ searchTerm, setSearchTerm, notifications, user, onLogout }: HeaderProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   
@@ -62,11 +62,27 @@ const Header: React.FC<HeaderProps> = ({ searchTerm, setSearchTerm, notification
               {notifications.length > 0 && ( <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{notifications.length}</span> )}
             </button>
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                <div className="p-4 border-b border-gray-200"><h3 className="font-semibold text-gray-900">Notificações</h3></div>
-                <div className="max-h-64 overflow-y-auto">
+              <div 
+                role="menu"
+                aria-label="Notificações"
+                className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+              >
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="font-semibold text-gray-900">Notificações</h3>
+                </div>
+                <div className="max-h-64 overflow-y-auto" role="list">
                   {notifications.length > 0 ? (
-                    notifications.map((notification) => ( <div key={notification.id} className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"> <div className={`flex items-start space-x-2 ${notification.type === 'warning' ? 'text-yellow-700' : notification.type === 'info' ? 'text-blue-700' : 'text-green-700'}`}> <div className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'warning' ? 'bg-yellow-500' : notification.type === 'info' ? 'bg-blue-500' : 'bg-green-500'}`}></div> <p className="text-sm">{notification.text}</p> </div> </div> ))
+                    notifications.map((notification) => (
+                      <div key={notification.id} role="listitem" className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50">
+                        <div className={`flex items-start space-x-2 ${notification.type === 'warning' ? 'text-yellow-700' : notification.type === 'info' ? 'text-blue-700' : 'text-green-700'}`}>
+                          <div 
+                            className={`w-2 h-2 rounded-full mt-2 ${notification.type === 'warning' ? 'bg-yellow-500' : notification.type === 'info' ? 'bg-blue-500' : 'bg-green-500'}`}
+                            aria-hidden="true"
+                          ></div>
+                          <p className="text-sm">{notification.text}</p>
+                        </div>
+                      </div>
+                    ))
                   ) : (
                     <p className="p-4 text-sm text-gray-500">Nenhuma notificação nova.</p>
                   )}
@@ -85,16 +101,34 @@ const Header: React.FC<HeaderProps> = ({ searchTerm, setSearchTerm, notification
               <span className="text-sm font-medium">{user?.email ?? 'Usuário'}</span>
             </button>
             {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+              <div 
+                role="menu"
+                aria-label="Menu do usuário"
+                className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+              >
                 <div className="py-2">
-                  <a href="#" className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"><UserIcon size={16} className="mr-2" />Perfil</a>
-                  <a href="#" className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"><Settings size={16} className="mr-2" />Configurações</a>
-                  <hr className="my-1" />
+                  <a 
+                    href="#" 
+                    role="menuitem"
+                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <UserIcon size={16} className="mr-2" aria-hidden="true" />Perfil
+                  </a>
+                  <a 
+                    href="#" 
+                    role="menuitem"
+                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <Settings size={16} className="mr-2" aria-hidden="true" />Configurações
+                  </a>
+                  <hr className="my-1" aria-hidden="true" />
                   <button 
                     onClick={onLogout}
-                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    role="menuitem"
+                    aria-label="Sair da conta"
+                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <LogOut size={16} className="mr-2" />Sair
+                    <LogOut size={16} className="mr-2" aria-hidden="true" />Sair
                   </button>
                 </div>
               </div>

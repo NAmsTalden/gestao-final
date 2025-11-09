@@ -11,7 +11,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [pendingEmail, setPendingEmail] = useState('');
+  const [pendingEmail, setPendingEmail] = useState(''); 
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           }
         });
         if (error) throw error;
-        setPendingEmail(email);
+        setPendingEmail(email); 
         setMessage('Verifique seu email para confirmar o registro!');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -37,13 +37,13 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           password,
         });
         if (error) throw error;
-        onLogin();
+        onLogin(); 
       }
     } catch (err) {
       const error = err as Error;
       if (error.message === "Email not confirmed") {
         setError("Seu email ainda não foi confirmado. Por favor, verifique sua caixa de entrada.");
-        setPendingEmail(email);
+        setPendingEmail(email); 
       } else if (error.message === "Invalid login credentials") {
         setError("Email ou senha inválidos.");
       } else {
@@ -72,7 +72,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
 
       if (error) throw error;
       setMessage('Email de confirmação reenviado! Verifique sua caixa de entrada.');
-    } catch (err) {
+    } catch (err) { // <-- AQUI ESTAVA O ERRO (ERA UM '=')
       const error = err as Error;
       setError(error.message || 'Erro ao reenviar email de confirmação');
     } finally {
@@ -88,25 +88,25 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full shadow-lg mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full shadow-lg mb-4" aria-hidden="true">
             <FileText className="text-white w-8 h-8" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             Sistema de Gerenciamento de Licitações
-          </h2>
+          </h1>
           <p className="mt-2 text-gray-600">
             {isRegistering ? 'Crie sua conta para começar' : 'Acesse sua conta para continuar'}
           </p>
         </div>
 
         <div className="bg-white py-8 px-8 shadow-xl rounded-lg">
-          <form className="space-y-6" onSubmit={handleAuth}>
+          <form className="space-y-6" onSubmit={handleAuth} aria-label={isRegistering ? "Formulário de registro" : "Formulário de login"}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
                   <AtSign className="w-5 h-5 text-gray-400" />
                 </div>
                 <input
@@ -117,7 +117,9 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  aria-describedby={error && error.includes("email") ? "email-error" : undefined}
+                  aria-invalid={error && error.includes("email") ? "true" : "false"}
+                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="seu.email@exemplo.com"
                 />
               </div>
@@ -128,7 +130,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
                 Senha
               </label>
               <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
                   <Lock className="w-5 h-5 text-gray-400" />
                 </div>
                 <input
@@ -140,21 +142,32 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  aria-describedby={error ? "password-error" : "password-help"}
+                  aria-invalid={error ? "true" : "false"}
+                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="••••••••"
                 />
               </div>
+              <p id="password-help" className="mt-1 text-xs text-gray-500" aria-live="polite">
+                Mínimo 6 caracteres
+              </p>
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm text-center p-2 bg-red-50 rounded-md">
+              <div 
+                role="alert" 
+                aria-live="assertive"
+                id={error.includes("email") ? "email-error" : "password-error"}
+                className="text-red-600 text-sm text-center p-2 bg-red-50 rounded-md"
+              >
                 <div>{error}</div>
                 {error.includes("Email not confirmed") && pendingEmail && (
                   <button
                     type="button"
                     onClick={handleResendConfirmation}
                     disabled={loading}
-                    className="mt-2 text-blue-600 hover:text-blue-800 underline text-xs"
+                    aria-label="Reenviar email de confirmação"
+                    className="mt-2 text-blue-600 hover:text-blue-800 underline text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                   >
                     Reenviar email de confirmação
                   </button>
@@ -162,7 +175,11 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
               </div>
             )}
             {message && (
-              <div className="text-green-600 text-sm text-center p-2 bg-green-50 rounded-md">
+              <div 
+                role="status" 
+                aria-live="polite"
+                className="text-green-600 text-sm text-center p-2 bg-green-50 rounded-md"
+              >
                 {message}
               </div>
             )}
@@ -171,7 +188,9 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 transition-all"
+                aria-busy={loading}
+                aria-label={loading ? 'Processando...' : (isRegistering ? 'Registrar nova conta' : 'Fazer login')}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
               >
                 {loading ? 'Carregando...' : (isRegistering ? 'Registrar' : 'Entrar')}
               </button>
@@ -181,12 +200,14 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           <div className="mt-6 text-center">
             <div className="text-sm">
               <button
+                type="button"
                 onClick={() => {
                   setIsRegistering(!isRegistering);
                   setError('');
                   setMessage('');
                 }}
-                className="font-medium text-blue-600 hover:text-blue-500"
+                aria-label={isRegistering ? 'Já tem uma conta? Entre aqui' : 'Não tem uma conta? Registre-se'}
+                className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
               >
                 {isRegistering
                   ? 'Já tem uma conta? Entre aqui'
@@ -196,8 +217,10 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
             {!isRegistering && (
               <div className="text-sm mt-2">
                 <button
+                  type="button"
                   onClick={() => setIsResettingPassword(true)}
-                  className="font-medium text-gray-600 hover:text-gray-500"
+                  aria-label="Esqueceu sua senha? Recuperar senha"
+                  className="font-medium text-gray-600 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                 >
                   Esqueceu sua senha?
                 </button>

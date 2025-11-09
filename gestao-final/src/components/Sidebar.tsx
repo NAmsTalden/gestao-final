@@ -17,12 +17,12 @@ interface SidebarProps {
   setIsCollapsed: (collapsed: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ 
+const Sidebar = ({ 
   activeSection, 
   setActiveSection, 
   isCollapsed, 
   setIsCollapsed 
-}) => {
+}: SidebarProps) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'novo-processo', label: 'Novo Processo', icon: Plus },
@@ -37,23 +37,22 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside className={`bg-slate-800 text-white transition-all duration-300 flex flex-col ${
       isCollapsed ? 'w-16' : 'w-64'
     }`}>
-      {/* Cabeçalho da Sidebar */}
       <div className="p-4 border-b border-slate-700 flex items-center justify-between">
         {!isCollapsed && (
           <h2 className="text-lg font-semibold truncate">Menu Principal</h2>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 rounded hover:bg-slate-700 transition-colors"
+          className="p-1 rounded hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
+          aria-expanded={!isCollapsed}
         >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isCollapsed ? <ChevronRight size={20} aria-hidden="true" /> : <ChevronLeft size={20} aria-hidden="true" />}
         </button>
       </div>
 
-      {/* Lista de Menu */}
-      <nav className="flex-1 py-4">
-        <ul className="space-y-2">
+      <nav className="flex-1 py-4" aria-label="Navegação principal">
+        <ul className="space-y-2" role="list">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -68,9 +67,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                       : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                   }`}
                   aria-label={item.label}
+                  aria-current={isActive ? 'page' : undefined}
                   title={isCollapsed ? item.label : undefined}
                 >
-                  <Icon size={20} className="flex-shrink-0" />
+                  <Icon size={20} className="flex-shrink-0" aria-hidden="true" />
                   {!isCollapsed && (
                     <span className="ml-3 truncate">{item.label}</span>
                   )}

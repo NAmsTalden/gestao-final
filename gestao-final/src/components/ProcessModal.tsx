@@ -9,7 +9,7 @@ interface ProcessModalProps {
   onUpdateProcess: (processId: string, newStatus: Process['status'], newTimelineEvent: Process['timeline'][0]) => void;
 }
 
-const ProcessModal: React.FC<ProcessModalProps> = ({ process, onClose, onUpdateProcess }) => {
+const ProcessModal = ({ process, onClose, onUpdateProcess }: ProcessModalProps) => {
   const [newStatus, setNewStatus] = useState<Process['status']>(process.status);
   const [newEventDetails, setNewEventDetails] = useState('');
 
@@ -37,7 +37,13 @@ const ProcessModal: React.FC<ProcessModalProps> = ({ process, onClose, onUpdateP
                 <p className="text-gray-600 mb-3">{process.objeto}</p>
                 <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(process.status)}`}>{getStatusText(process.status)}</span>
               </div>
-              <button onClick={onClose} className="bg-white rounded-md text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" aria-label="Fechar modal"><X size={24} /></button>
+              <button 
+                onClick={onClose} 
+                className="bg-white rounded-md text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" 
+                aria-label="Fechar modal"
+              >
+                <X size={24} aria-hidden="true" />
+              </button>
             </div>
           </div>
 
@@ -47,39 +53,95 @@ const ProcessModal: React.FC<ProcessModalProps> = ({ process, onClose, onUpdateP
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">Informações Principais</h4>
                 <div className="space-y-4">
                   {/* ... outros campos ... */}
-                  <div className="flex items-start space-x-3"><Building2 className="w-5 h-5 text-gray-400 mt-0.5" /><div><p className="text-sm font-medium text-gray-900">Secretaria Solicitante</p><p className="text-sm text-gray-600">{process.secretaria}</p></div></div>
-                  <div className="flex items-start space-x-3"><User className="w-5 h-5 text-gray-400 mt-0.5" /><div><p className="text-sm font-medium text-gray-900">Responsável</p><p className="text-sm text-gray-600">{process.responsavel}</p></div></div>
-                  <div className="flex items-start space-x-3"><Calendar className="w-5 h-5 text-gray-400 mt-0.5" /><div><p className="text-sm font-medium text-gray-900">Data de Abertura</p><p className="text-sm text-gray-600">{process.dataAbertura}</p></div></div>
-                  <div className="flex items-start space-x-3"><Calendar className="w-5 h-5 text-gray-400 mt-0.5" /><div><p className="text-sm font-medium text-gray-900">Prazo Final</p><p className="text-sm text-gray-600">{process.prazoFinal}</p></div></div>
-                  
-                  {/* vvv CAMPO DE VALOR ATUALIZADO vvv */}
-                  <div className="flex items-start space-x-3"><DollarSign className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div className="flex items-start space-x-3">
+                    <Building2 className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Secretaria Solicitante</p>
+                      <p className="text-sm text-gray-600">{process.secretaria}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <User className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Responsável</p>
+                      <p className="text-sm text-gray-600">{process.responsavel}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Data de Abertura</p>
+                      <p className="text-sm text-gray-600">{process.dataAbertura}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Prazo Final</p>
+                      <p className="text-sm text-gray-600">{process.prazoFinal}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <DollarSign className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Valor Estimado</p>
                       <p className="text-sm text-gray-600">{formatCurrency(process.valorEstimado)}</p>
                     </div>
                   </div>
-                  {/* ^^^ FIM DA ATUALIZAÇÃO ^^^ */}
-
-                  <div className="flex items-start space-x-3"><FileText className="w-5 h-5 text-gray-400 mt-0.5" /><div><p className="text-sm font-medium text-gray-900">Observações</p><p className="text-sm text-gray-600">{process.observacoes}</p></div></div>
+                  <div className="flex items-start space-x-3">
+                    <FileText className="w-5 h-5 text-gray-400 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Observações</p>
+                      <p className="text-sm text-gray-600">{process.observacoes}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">Histórico do Processo</h4>
                 <div className="flow-root">
-                  <ul className="-mb-8">
-                    {process.timeline.map((item, itemIdx) => ( <li key={itemIdx}><div className="relative pb-8">{itemIdx !== process.timeline.length - 1 ? (<span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>) : null}<div className="relative flex space-x-3"><div><span className="h-8 w-8 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center">{getTimelineIcon(item.evento)}</span></div><div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4"><div><p className="text-sm font-medium text-gray-900">{item.evento}</p><p className="text-sm text-gray-500">{item.detalhes}</p><p className="text-xs text-gray-400">Por: {item.responsavel}</p></div><div className="text-right text-xs whitespace-nowrap text-gray-500">{item.data}</div></div></div></div></li> ))}
+                  <ul className="-mb-8" role="list">
+                    {process.timeline.map((item, itemIdx) => (
+                      <li key={itemIdx} role="listitem">
+                        <div className="relative pb-8">
+                          {itemIdx !== process.timeline.length - 1 && (
+                            <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                          )}
+                          <div className="relative flex space-x-3">
+                            <div>
+                              <span className="h-8 w-8 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center" aria-hidden="true">
+                                {getTimelineIcon(item.evento)}
+                              </span>
+                            </div>
+                            <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{item.evento}</p>
+                                <p className="text-sm text-gray-500">{item.detalhes}</p>
+                                <p className="text-xs text-gray-400">Por: {item.responsavel}</p>
+                              </div>
+                              <div className="text-right text-xs whitespace-nowrap text-gray-500">{item.data}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
 
               <div className="lg:col-span-2 mt-6 pt-6 border-t border-gray-200">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">Adicionar Novo Evento ao Histórico</h4>
-                <form onSubmit={handleUpdateSubmit} className="space-y-4">
+                <form onSubmit={handleUpdateSubmit} className="space-y-4" aria-label="Formulário para adicionar evento ao histórico">
                   <div>
                     <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Alterar Status para:</label>
-                    <select id="status" value={newStatus} onChange={(e) => setNewStatus(e.target.value as Process['status'])} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" >
+                    <select 
+                      id="status" 
+                      value={newStatus} 
+                      onChange={(e) => setNewStatus(e.target.value as Process['status'])} 
+                      aria-label="Selecione o novo status do processo"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    >
                       <option value="em-analise">Em Análise</option>
                       <option value="aguardando-documento">Aguardando Documento</option>
                       <option value="publicado">Publicado</option>
@@ -88,11 +150,24 @@ const ProcessModal: React.FC<ProcessModalProps> = ({ process, onClose, onUpdateP
                   </div>
                   <div>
                     <label htmlFor="details" className="block text-sm font-medium text-gray-700 mb-1">Descrição do Evento:</label>
-                    <textarea id="details" value={newEventDetails} onChange={(e) => setNewEventDetails(e.target.value)} rows={3} placeholder="Descreva a atualização ou o motivo da mudança de status..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+                    <textarea 
+                      id="details" 
+                      value={newEventDetails} 
+                      onChange={(e) => setNewEventDetails(e.target.value)} 
+                      rows={3} 
+                      placeholder="Descreva a atualização ou o motivo da mudança de status..." 
+                      aria-label="Descrição do evento"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                    />
                   </div>
                   <div className="flex justify-end">
-                    <button type="submit" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                      <Send size={16} className="mr-2" />
+                    <button 
+                      type="submit" 
+                      aria-label="Adicionar evento ao histórico do processo"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    >
+                      <Send size={16} className="mr-2" aria-hidden="true" />
                       Adicionar ao Histórico
                     </button>
                   </div>
@@ -101,7 +176,14 @@ const ProcessModal: React.FC<ProcessModalProps> = ({ process, onClose, onUpdateP
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button onClick={onClose} type="button" className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Fechar</button>
+            <button 
+              onClick={onClose} 
+              type="button" 
+              aria-label="Fechar modal de detalhes do processo"
+              className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Fechar
+            </button>
           </div>
         </div>
       </div>

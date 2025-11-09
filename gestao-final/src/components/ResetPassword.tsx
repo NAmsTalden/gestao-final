@@ -36,9 +36,9 @@ const ResetPassword = ({ onCancel }: ResetPasswordProps) => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Recuperar Senha
-        </h2>
+        </h1>
         <p className="mt-2 text-center text-sm text-gray-600">
           Digite seu email e enviaremos instruções para redefinir sua senha.
         </p>
@@ -46,32 +46,48 @@ const ResetPassword = ({ onCancel }: ResetPasswordProps) => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleResetPassword}>
+          <form className="space-y-6" onSubmit={handleResetPassword} aria-label="Formulário de recuperação de senha">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="reset-email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <div className="mt-1">
                 <input
-                  id="email"
+                  id="reset-email"
                   name="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  aria-describedby={error ? "reset-error" : "reset-help"}
+                  aria-invalid={error ? "true" : "false"}
+                  autoComplete="email"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="seu.email@exemplo.com"
                 />
               </div>
+              <p id="reset-help" className="mt-1 text-xs text-gray-500">
+                Enviaremos um link de recuperação para este email
+              </p>
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm">
+              <div 
+                role="alert" 
+                aria-live="assertive"
+                id="reset-error"
+                className="text-red-600 text-sm"
+              >
                 {error}
               </div>
             )}
 
             {message && (
-              <div className="text-green-600 text-sm">
+              <div 
+                role="status" 
+                aria-live="polite"
+                className="text-green-600 text-sm"
+              >
                 {message}
               </div>
             )}
@@ -80,13 +96,16 @@ const ResetPassword = ({ onCancel }: ResetPasswordProps) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                aria-busy={loading}
+                aria-label={loading ? "Enviando email de recuperação..." : "Enviar email de recuperação"}
+                className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {loading ? 'Enviando...' : 'Enviar Email'}
               </button>
               <button
                 type="button"
                 onClick={onCancel}
+                aria-label="Voltar para login"
                 className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Voltar
