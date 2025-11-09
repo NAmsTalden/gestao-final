@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, User, Bell, Shield, Save, Eye, EyeOff } from 'lucide-react';
+import { Settings, User, Bell, Save, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
