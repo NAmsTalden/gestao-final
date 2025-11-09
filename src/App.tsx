@@ -225,9 +225,19 @@ function App() {
       case 'novo-processo': return <ProcessoForm onSaveProcess={handleSaveProcess} processoParaEditar={processoParaEditar} />;
       case 'processos-andamento': const processosEmAndamento = processosFiltrados.filter(p => p.status !== 'finalizado'); return ( <div className="p-6"> <h2 className="text-2xl font-bold text-gray-900 mb-6">Processos em Andamento</h2> <ProcessoListagem processes={processosEmAndamento} onEditProcess={handleEditProcess} onDeleteProcess={handleDeleteProcess} onUpdateProcess={handleUpdateProcess} /> </div> );
       case 'processos-concluidos': const processosConcluidos = processosFiltrados.filter(p => p.status === 'finalizado'); return ( <div className="p-6"> <h2 className="text-2xl font-bold text-gray-900 mb-6">Processos Concluídos</h2> <ProcessoListagem processes={processosConcluidos} onEditProcess={handleEditProcess} onDeleteProcess={handleDeleteProcess} onUpdateProcess={handleUpdateProcess} /> </div> );
-      case 'busca-avancada': return <BuscaAvancada />;
-      case 'relatorios': return <Relatorios />;
-      case 'configuracoes': return <Configuracoes />;
+      case 'busca-avancada':
+        return (
+          <BuscaAvancada
+            processes={processes}
+            onEditProcess={handleEditProcess}
+            onDeleteProcess={handleDeleteProcess}
+            onUpdateProcess={handleUpdateProcess}
+          />
+        );
+      case 'relatorios':
+        return <Relatorios processes={processes} />;
+      case 'configuracoes':
+        return <Configuracoes user={session.user} />;
       default: return <Dashboard processes={processosFiltrados} searchTerm={searchTerm} activeFilter={activeFilter} setActiveFilter={setActiveFilter} onEditProcess={handleEditProcess} onDeleteProcess={handleDeleteProcess} onUpdateProcess={handleUpdateProcess} />;
     }
   };
