@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Settings, User, Bell, Save, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
@@ -17,6 +17,12 @@ const Configuracoes = ({ user }: ConfiguracoesProps) => {
     email: user?.email || '',
     nome: '',
   });
+
+  useEffect(() => {
+    if (user?.email) {
+      setProfileData(prev => ({ ...prev, email: user.email || '' }));
+    }
+  }, [user]);
 
   const [notificationSettings, setNotificationSettings] = useState({
     emailProcessos: true,
