@@ -257,7 +257,11 @@ function App() {
           setSearchTerm={setSearchTerm}
           notifications={notifications}
           user={session.user}
-          onLogout={() => supabase.auth.signOut()}
+          onLogout={async () => {
+            await supabase.auth.signOut();
+            setSession(null);
+            window.location.href = '/';
+          }}
         />
         <main className="flex-1 overflow-y-auto">
           {renderContent()}
