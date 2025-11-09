@@ -11,6 +11,7 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState(''); // Para mensagens de sucesso (ex: registro)
+  const [pendingEmail, setPendingEmail] = useState(''); // Email que precisa ser confirmado
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,10 +26,11 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin
+            emailRedirectTo: `${window.location.origin}`
           }
         });
         if (error) throw error;
+        setPendingEmail(email); // Salva o email para possível reenvio
         setMessage('Verifique seu email para confirmar o registro!');
       } else {
         // Login de usuário existente
@@ -43,11 +45,38 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
       const error = err as Error;
       if (error.message === "Email not confirmed") {
         setError("Seu email ainda não foi confirmado. Por favor, verifique sua caixa de entrada.");
+        setPendingEmail(email); // Salva o email para reenvio
       } else if (error.message === "Invalid login credentials") {
         setError("Email ou senha inválidos.");
       } else {
         setError(error.message || 'Ocorreu um erro durante a autenticação');
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!pendingEmail) return;
+    
+    setLoading(true);
+    setError('');
+    setMessage('');
+
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: pendingEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}`
+        }
+      });
+
+      if (error) throw error;
+      setMessage('Email de confirmação reenviado! Verifique sua caixa de entrada.');
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || 'Erro ao reenviar email de confirmação');
     } finally {
       setLoading(false);
     }
@@ -128,7 +157,17 @@ const Login = ({ onLogin }: { onLogin: () => void }) => {
             {/* --- MENSAGENS DE ERRO OU SUCESSO --- */}
             {error && (
               <div className="text-red-600 text-sm text-center p-2 bg-red-50 rounded-md">
-                {error}
+                <div>{error}</div>
+                {error.includes("Email not confirmed") && pendingEmail && (
+                  <button
+                    type="button"
+                    onClick={handleResendConfirmation}
+                    disabled={loading}
+                    className="mt-2 text-blue-600 hover:text-blue-800 underline text-xs"
+                  >
+                    Reenviar email de confirmação
+                  </button>
+                )}
               </div>
             )}
             {message && (
