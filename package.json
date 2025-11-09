@@ -8,16 +8,16 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server.js"
+    "server": "node server.js",
+    "check-env": "node check-env.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.78.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
     "lucide-react": "^0.344.0",
-    "pg": "^8.12.0",
+    "pg": "^8.11.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -25,6 +25,8 @@
     "@eslint/js": "^9.9.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "@types/pg": "^8.10.9",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
