@@ -1,8 +1,8 @@
-# Dependências
+
 node_modules
 
-# Ficheiro de segredos (NUNCA enviar para o GitHub)
+
 .env
 
-# Ficheiros de build do Vite
+
 dist
