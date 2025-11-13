@@ -71,9 +71,9 @@ function App() {
     try {
       // O cliente supabase já gerencia a autenticação
       const { data, error } = await supabase
-        .from('processes') // O nome da sua tabela
+        .from('processes') 
         .select('*')
-        .order('dataAbertura', { ascending: false }); // Igual ao seu 'ORDER BY' no backend
+        .order('dataAbertura', { ascending: false }); 
 
       if (error) throw error;
 
@@ -177,8 +177,7 @@ function App() {
         throw new Error("Processo não encontrado no estado local.");
       }
 
-      // 2. Cria a nova timeline (lógica que estava no seu backend)
-      // Garantimos que a timeline exista antes de espalhar
+  
       const currentTimeline = processToUpdate.timeline || [];
       const newTimeline = [...currentTimeline, newTimelineEvent];
 
